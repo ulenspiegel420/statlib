@@ -1,0 +1,7 @@
+setup.py
+statlib/__init__.py
+statlib/core.py
+statlib.egg-info/PKG-INFO
+statlib.egg-info/SOURCES.txt
+statlib.egg-info/dependency_links.txt
+statlib.egg-info/top_level.txt
