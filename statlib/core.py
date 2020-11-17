@@ -37,8 +37,16 @@ class InfluxStat(Stat):
         self.__port = port
         self.__db_name = db_name
         self.__url = "http://{}:{}/write?db={}".format(self.__ip, str(self.__port), self.__db_name)
-        self.__headers = {'Authorization': self.__token}
+        self.__headers = {'Authorization': 'Bearer ' + self.__token}
         self.__http = urllib3.PoolManager()
+
+    def send_measurement(self, name, data, **tags):
+        tag_set = [tag+'='+value for tag, value in tags.items()]
+        if len(tag_set) != 0:
+            measurement = name + ',' + ','.join(tag_set) + ' ' + data
+        else:
+            measurement = name + ' ' + data
+        return self.send(measurement)
 
     def send(self, data, **params):
         params_str = ''
@@ -51,7 +59,6 @@ class InfluxStat(Stat):
         if r.status == 200 or r.status == 204:
             return 0
         return -1
-
 
     def send_from_file(self, path, **params):
         with open(path) as handler:
